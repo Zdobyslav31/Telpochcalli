@@ -15,6 +15,7 @@ public class BaseWarrior : MonoBehaviour {
         Charge
     }
     private int MIN_DAMAGE_PERCENTAGE = 3;
+    private int MIN_DISTANCE_FOR_CHARGE = 2;
 
     [SerializeField] public Team team;
     [SerializeField] public string warriorName;
@@ -31,7 +32,7 @@ public class BaseWarrior : MonoBehaviour {
     [SerializeField] private int rangedAttackDisruptingPower;
     public int regroupAbility;
     [SerializeField] public List<Action> possibleActions;
-    public int chargeSpeed;
+    public int chargeSpeed; //TODO: change to Private after debugging finished
 
     private void Awake() {
         currentHealth = maxHealth;
@@ -66,6 +67,17 @@ public class BaseWarrior : MonoBehaviour {
 
     public void ResetMovePoints() {
         currentMovePoints = maxMovePoints;
+        chargeSpeed = 0;
+    }
+
+    public void AdjustChargeSpeed(List<TerrainNode> pathTraveled) {
+        foreach (TerrainNode terrainNode in pathTraveled) {
+            if (terrainNode.GetTerrainType() == TerrainNode.TerrainType.Normal) {
+                chargeSpeed++;
+            } else {
+                chargeSpeed = 0;
+            }
+        }
     }
 
     public void TakeStrike(Strike strike) {
@@ -112,7 +124,7 @@ public class BaseWarrior : MonoBehaviour {
     public bool IsActionPossible(Action action) {
         if (possibleActions.Contains(action)) {
             if(action == Action.Charge) {
-                return (chargeSpeed > 0);
+                return (chargeSpeed >= MIN_DISTANCE_FOR_CHARGE);
             }
             return true;
         } else {

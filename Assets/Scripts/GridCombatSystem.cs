@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GridCombatSystem : MonoBehaviour {
@@ -336,8 +337,8 @@ public class GridCombatSystem : MonoBehaviour {
             GetActiveWarriorUISystem().StartMoveThroughPath(pathCoords, ReportMoveAnimationFinished);
             battleState = BattleState.Busy;
             GetActiveWarriorClass().UseMovePoints(distance);
+            GetActiveWarriorClass().AdjustChargeSpeed(pathNodes.Skip(1).ToList<TerrainNode>());
         }
-        
     }
 
     private void RotateActiveWarrior(Vector3 targetPosition) {
