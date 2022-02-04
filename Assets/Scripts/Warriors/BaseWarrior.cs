@@ -11,7 +11,8 @@ public class BaseWarrior : MonoBehaviour {
     public enum Action {
         Attack,
         Regroup,
-        Shoot
+        Shoot,
+        Charge
     }
     private int MIN_DAMAGE_PERCENTAGE = 3;
 

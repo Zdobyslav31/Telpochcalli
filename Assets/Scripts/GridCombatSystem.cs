@@ -62,6 +62,10 @@ public class GridCombatSystem : MonoBehaviour {
                     GetAvailableRangedAttackTargetPositions, PerformRangedAttack
                 )
             },
+            { BaseWarrior.Action.Charge, new ActionDetails(
+                    GetAvailableMeleeAttackTargetPositions, PerformMeleeAttack
+                )
+            },
         };
         activeWarriorIndex = 0;
         isActionSelected = false;
@@ -104,7 +108,7 @@ public class GridCombatSystem : MonoBehaviour {
             case Phase.Rotation:
                 phase = Phase.Action;
                 isActionSelected = false;
-                selectActionPanel.SetActive(true);
+                ActivateSelectActionPanel();
                 Utils.ChangeButtonText(changePhaseButton, "Zakończ turę");
                 break;
             case Phase.Action:
@@ -150,6 +154,21 @@ public class GridCombatSystem : MonoBehaviour {
         }
         GetActiveWarriorClass().ResetMovePoints();
         GetActiveWarriorUISystem().SetActiveIndicatorEnabled(true);
+    }
+
+    private void ActivateSelectActionPanel() {
+        selectActionPanel.SetActive(true);
+        List<BaseWarrior.Action> avaliableActions = GetActiveWarriorClass().avaliableActions;
+        int i = 0;
+        foreach (BaseWarrior.Action action in Enum.GetValues(typeof(BaseWarrior.Action))) {
+            GameObject actionButton = selectActionPanel.transform.GetChild(i).gameObject;
+            if (avaliableActions.Contains(action)) {
+                actionButton.SetActive(true);
+            } else {
+                actionButton.SetActive(false);
+            }
+            i++;
+        }
     }
 
     /*
