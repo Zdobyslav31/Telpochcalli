@@ -46,3 +46,7 @@ sysinfo.txt
 
 # Crashlytics generated file
 crashlytics-build.properties
+
+/Assets/CodeMonkey
+/Assets/Scripts/GridMap/Tutorials
+/Assets/TextMesh Pro
