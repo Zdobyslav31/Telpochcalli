@@ -11,9 +11,11 @@ public class BaseWarrior : MonoBehaviour {
     public enum Action {
         Attack,
         Regroup,
-        Shoot
+        Shoot,
+        Charge
     }
     private int MIN_DAMAGE_PERCENTAGE = 3;
+    private int MIN_DISTANCE_FOR_CHARGE = 2;
 
     [SerializeField] public Team team;
     [SerializeField] public string warriorName;
@@ -28,12 +30,15 @@ public class BaseWarrior : MonoBehaviour {
     [SerializeField] private int meleeAttackDisruptingPower;
     [SerializeField] private int rangedAttackDamagingPower;
     [SerializeField] private int rangedAttackDisruptingPower;
+    [SerializeField] private int chargeMomentum;
     public int regroupAbility;
-    [SerializeField] public List<Action> avaliableActions;
+    [SerializeField] public List<Action> possibleActions;
+    public int chargeSpeed; //TODO: change to Private after debugging finished
 
     private void Awake() {
         currentHealth = maxHealth;
         currentOrderliness = maxOrderliness;
+        chargeSpeed = 0;
         ResetMovePoints();
     }
 
@@ -57,23 +62,38 @@ public class BaseWarrior : MonoBehaviour {
         return currentMovePoints;
     }
 
+    public int GetChargeMomentum() {
+        return chargeMomentum;
+    }
+
     public void UseMovePoints(int movePoints) {
         currentMovePoints = Math.Clamp(currentMovePoints - movePoints, 0, maxMovePoints);
     }
 
     public void ResetMovePoints() {
         currentMovePoints = maxMovePoints;
+        chargeSpeed = 0;
+    }
+
+    public void AdjustChargeSpeed(List<TerrainNode> pathTraveled) {
+        foreach (TerrainNode terrainNode in pathTraveled) {
+            if (terrainNode.GetTerrainType() == TerrainNode.TerrainType.Normal) {
+                chargeSpeed++;
+            } else {
+                chargeSpeed = 0;
+            }
+        }
     }
 
     public void TakeStrike(Strike strike) {
         Debug.Log(this.gameObject.name + " current stats: health: " + currentHealth + "; orderliness: " + currentOrderliness);
         Debug.Log("Taking " + strike.attackType + " strike: " + strike);
         ChangeOrderliness(-strike.preDamageDisruption);
-        if (strike.attackType == Strike.AttackType.Melee) {
-            ChangeHealth(-strike.damage * Math.Max(MIN_DAMAGE_PERCENTAGE, (100 - currentOrderliness)) / 100);
-        } else if (strike.attackType == Strike.AttackType.Ranged) {
-            ChangeHealth(-strike.damage);
+        float defenceModifier = 1f;
+        if (!strike.ignoresOrderliness) {
+            defenceModifier = Math.Max(MIN_DAMAGE_PERCENTAGE, (100 - currentOrderliness)) / 100f;
         }
+        ChangeHealth((int)(-strike.damage * defenceModifier));
         ChangeOrderliness(-strike.disruption);
         Debug.Log(this.gameObject.name + " current stats: health: " + currentHealth + "; orderliness: " + currentOrderliness);
     }
@@ -90,10 +110,16 @@ public class BaseWarrior : MonoBehaviour {
                 return new Strike(
                     attackType,
                     GetDamageRandomizedAndModified(rangedAttackDamagingPower),
-                    GetDamageRandomizedAndModified(rangedAttackDisruptingPower)
+                    GetDamageRandomizedAndModified(rangedAttackDisruptingPower),
+                    ignoresOrderliness:true
                     );
             case Strike.AttackType.Charge:
-                throw new NotImplementedException();
+                return new Strike(
+                    attackType,
+                    GetDamageRandomizedAndModified(meleeAttackDamagingPower + chargeSpeed * chargeMomentum),
+                    GetDamageRandomizedAndModified(meleeAttackDisruptingPower),
+                    chargeSpeed
+                    );
             case Strike.AttackType.Splash:
                 throw new NotImplementedException();
         }
@@ -104,6 +130,17 @@ public class BaseWarrior : MonoBehaviour {
         System.Random rnd = new System.Random();
         int randomizedDamage = baseDamage * (100 + rnd.Next(-20, 21)) / 100;
         return (int) (randomizedDamage * Math.Max(GetHealthNormailzed(), .3f));
+    }
+
+    public bool IsActionPossible(Action action) {
+        if (possibleActions.Contains(action)) {
+            if(action == Action.Charge) {
+                return (chargeSpeed >= MIN_DISTANCE_FOR_CHARGE);
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 
