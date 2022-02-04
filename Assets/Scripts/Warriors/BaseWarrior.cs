@@ -30,11 +30,13 @@ public class BaseWarrior : MonoBehaviour {
     [SerializeField] private int rangedAttackDamagingPower;
     [SerializeField] private int rangedAttackDisruptingPower;
     public int regroupAbility;
-    [SerializeField] public List<Action> avaliableActions;
+    [SerializeField] public List<Action> possibleActions;
+    public int chargeSpeed;
 
     private void Awake() {
         currentHealth = maxHealth;
         currentOrderliness = maxOrderliness;
+        chargeSpeed = 0;
         ResetMovePoints();
     }
 
@@ -105,6 +107,17 @@ public class BaseWarrior : MonoBehaviour {
         System.Random rnd = new System.Random();
         int randomizedDamage = baseDamage * (100 + rnd.Next(-20, 21)) / 100;
         return (int) (randomizedDamage * Math.Max(GetHealthNormailzed(), .3f));
+    }
+
+    public bool IsActionPossible(Action action) {
+        if (possibleActions.Contains(action)) {
+            if(action == Action.Charge) {
+                return (chargeSpeed > 0);
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 

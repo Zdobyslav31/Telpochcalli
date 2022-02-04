@@ -2411,7 +2411,23 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2571917681026336854, guid: 1fb9a7932d7cdb6438206b616ed8a14c, type: 3}
+      propertyPath: possibleActions.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571917681026336854, guid: 1fb9a7932d7cdb6438206b616ed8a14c, type: 3}
       propertyPath: avaliableActions.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571917681026336854, guid: 1fb9a7932d7cdb6438206b616ed8a14c, type: 3}
+      propertyPath: possibleActions.Array.data[1]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571917681026336854, guid: 1fb9a7932d7cdb6438206b616ed8a14c, type: 3}
+      propertyPath: possibleActions.Array.data[2]
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2571917681026336854, guid: 1fb9a7932d7cdb6438206b616ed8a14c, type: 3}
+      propertyPath: possibleActions.Array.data[3]
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2571917681026336854, guid: 1fb9a7932d7cdb6438206b616ed8a14c, type: 3}
@@ -2481,7 +2497,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5648030565311808837, guid: 55970e3c5f4b4e84994aa6401b7db267, type: 3}
       propertyPath: m_Name
-      value: IndianInfantry
+      value: JaguarInfantry
       objectReference: {fileID: 0}
     - target: {fileID: 5648030565311808839, guid: 55970e3c5f4b4e84994aa6401b7db267, type: 3}
       propertyPath: m_RootOrder
@@ -2528,8 +2544,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5648030565311808841, guid: 55970e3c5f4b4e84994aa6401b7db267, type: 3}
+      propertyPath: possibleActions.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5648030565311808841, guid: 55970e3c5f4b4e84994aa6401b7db267, type: 3}
       propertyPath: avaliableActions.Array.size
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5648030565311808841, guid: 55970e3c5f4b4e84994aa6401b7db267, type: 3}
+      propertyPath: possibleActions.Array.data[1]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5648030565311808841, guid: 55970e3c5f4b4e84994aa6401b7db267, type: 3}
+      propertyPath: possibleActions.Array.data[2]
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5648030565311808841, guid: 55970e3c5f4b4e84994aa6401b7db267, type: 3}
       propertyPath: avaliableActions.Array.data[1]

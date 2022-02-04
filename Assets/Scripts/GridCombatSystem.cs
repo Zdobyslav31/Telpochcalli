@@ -158,11 +158,10 @@ public class GridCombatSystem : MonoBehaviour {
 
     private void ActivateSelectActionPanel() {
         selectActionPanel.SetActive(true);
-        List<BaseWarrior.Action> avaliableActions = GetActiveWarriorClass().avaliableActions;
         int i = 0;
         foreach (BaseWarrior.Action action in Enum.GetValues(typeof(BaseWarrior.Action))) {
             GameObject actionButton = selectActionPanel.transform.GetChild(i).gameObject;
-            if (avaliableActions.Contains(action)) {
+            if (GetActiveWarriorClass().IsActionPossible(action)) {
                 actionButton.SetActive(true);
             } else {
                 actionButton.SetActive(false);
