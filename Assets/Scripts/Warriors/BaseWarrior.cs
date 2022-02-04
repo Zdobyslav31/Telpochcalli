@@ -30,6 +30,7 @@ public class BaseWarrior : MonoBehaviour {
     [SerializeField] private int meleeAttackDisruptingPower;
     [SerializeField] private int rangedAttackDamagingPower;
     [SerializeField] private int rangedAttackDisruptingPower;
+    [SerializeField] private int chargeMomentum;
     public int regroupAbility;
     [SerializeField] public List<Action> possibleActions;
     public int chargeSpeed; //TODO: change to Private after debugging finished
@@ -61,6 +62,10 @@ public class BaseWarrior : MonoBehaviour {
         return currentMovePoints;
     }
 
+    public int GetChargeMomentum() {
+        return chargeMomentum;
+    }
+
     public void UseMovePoints(int movePoints) {
         currentMovePoints = Math.Clamp(currentMovePoints - movePoints, 0, maxMovePoints);
     }
@@ -84,11 +89,11 @@ public class BaseWarrior : MonoBehaviour {
         Debug.Log(this.gameObject.name + " current stats: health: " + currentHealth + "; orderliness: " + currentOrderliness);
         Debug.Log("Taking " + strike.attackType + " strike: " + strike);
         ChangeOrderliness(-strike.preDamageDisruption);
-        if (strike.attackType == Strike.AttackType.Melee) {
-            ChangeHealth(-strike.damage * Math.Max(MIN_DAMAGE_PERCENTAGE, (100 - currentOrderliness)) / 100);
-        } else if (strike.attackType == Strike.AttackType.Ranged) {
-            ChangeHealth(-strike.damage);
+        float defenceModifier = 1f;
+        if (!strike.ignoresOrderliness) {
+            defenceModifier = Math.Max(MIN_DAMAGE_PERCENTAGE, (100 - currentOrderliness)) / 100f;
         }
+        ChangeHealth((int)(-strike.damage * defenceModifier));
         ChangeOrderliness(-strike.disruption);
         Debug.Log(this.gameObject.name + " current stats: health: " + currentHealth + "; orderliness: " + currentOrderliness);
     }
@@ -105,10 +110,16 @@ public class BaseWarrior : MonoBehaviour {
                 return new Strike(
                     attackType,
                     GetDamageRandomizedAndModified(rangedAttackDamagingPower),
-                    GetDamageRandomizedAndModified(rangedAttackDisruptingPower)
+                    GetDamageRandomizedAndModified(rangedAttackDisruptingPower),
+                    ignoresOrderliness:true
                     );
             case Strike.AttackType.Charge:
-                throw new NotImplementedException();
+                return new Strike(
+                    attackType,
+                    GetDamageRandomizedAndModified(meleeAttackDamagingPower + chargeSpeed * chargeMomentum),
+                    GetDamageRandomizedAndModified(meleeAttackDisruptingPower),
+                    chargeSpeed
+                    );
             case Strike.AttackType.Splash:
                 throw new NotImplementedException();
         }

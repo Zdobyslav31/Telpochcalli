@@ -8,7 +8,7 @@ using UnityEngine;
 public class GridCombatSystem : MonoBehaviour {
     private int LAYER_Z_ALT = -3;
     private int FLANK_ATTACK_PRE_DAMAGE_DISRUPTION = 10;
-    private int REAR_ATTACK_PRE_DAMAGE_DISRUPTION = 10;
+    private int REAR_ATTACK_PRE_DAMAGE_DISRUPTION = 20;
     private enum BattleState {
         Busy,
         Idle
@@ -64,7 +64,7 @@ public class GridCombatSystem : MonoBehaviour {
                 )
             },
             { BaseWarrior.Action.Charge, new ActionDetails(
-                    GetAvailableMeleeAttackTargetPositions, PerformMeleeAttack
+                    GetAvailableMeleeAttackTargetPositions, PerformCharge
                 )
             },
         };
@@ -380,30 +380,44 @@ public class GridCombatSystem : MonoBehaviour {
     }
 
     private void PerformMeleeAttack(CombatGridObject target) {
-        GetActiveWarriorCoordinates(out int AttackerX, out int AttackerY);
-        CombatGridObject attackerField = GetCombatGrid().GetGridObject(AttackerX, AttackerY);
-        WarriorUISystem.Direction targetDirection = target.GetWarrior().GetComponent<WarriorUISystem>().direction;
-
-
         Strike strike = GetActiveWarriorClass().GenerateStrike(Strike.AttackType.Melee);
-        if (GetFieldsInFlank(target, targetDirection).Contains(attackerField)) { // flank attack
-            strike.preDamageDisruption = FLANK_ATTACK_PRE_DAMAGE_DISRUPTION;
-        } else if (GetFieldsInRear(target, targetDirection).Contains(attackerField)) { // rear attack
-            strike.preDamageDisruption = REAR_ATTACK_PRE_DAMAGE_DISRUPTION;
-        }
-        target.GetWarrior().GetComponent<BaseWarrior>().TakeStrike(strike);
-        StartUpdateBarsAnimation(target.GetWarrior().GetComponent<WarriorUISystem>());
+        strike = ApplyDirectionModifiers(strike, target);
+        TakeStrike(target, strike);
     }
 
-    private void PerformRangedAttack(CombatGridObject target) {
-        Strike strike = GetActiveWarriorClass().GenerateStrike(Strike.AttackType.Ranged);
-        target.GetWarrior().GetComponent<BaseWarrior>().TakeStrike(strike);
-        StartUpdateBarsAnimation(target.GetWarrior().GetComponent<WarriorUISystem>());
+    private void PerformCharge(CombatGridObject target) {
+        Strike strike = GetActiveWarriorClass().GenerateStrike(Strike.AttackType.Charge);
+        strike = ApplyDirectionModifiers(strike, target);
+        strike.preDamageDisruption *= GetActiveWarriorClass().GetChargeMomentum();
+        TakeStrike(target, strike);
     }
 
     private void PerformRegroup(CombatGridObject target = null) {
         GetActiveWarriorClass().ChangeOrderliness(GetActiveWarriorClass().regroupAbility);
         StartUpdateBarsAnimation(GetActiveWarriorUISystem());
+    }
+
+    private Strike ApplyDirectionModifiers(Strike strike, CombatGridObject target) {
+        GetActiveWarriorCoordinates(out int AttackerX, out int AttackerY);
+        CombatGridObject attackerField = GetCombatGrid().GetGridObject(AttackerX, AttackerY);
+        WarriorUISystem.Direction targetDirection = target.GetWarrior().GetComponent<WarriorUISystem>().direction;
+        if (GetFieldsInFlank(target, targetDirection).Contains(attackerField)) { // flank attack
+            strike.preDamageDisruption += FLANK_ATTACK_PRE_DAMAGE_DISRUPTION;
+        } else if (GetFieldsInRear(target, targetDirection).Contains(attackerField)) { // rear attack
+            strike.preDamageDisruption += REAR_ATTACK_PRE_DAMAGE_DISRUPTION;
+        }
+        return strike;
+    }
+
+    private void TakeStrike(CombatGridObject target, Strike strike) {
+        target.GetWarrior().GetComponent<BaseWarrior>().TakeStrike(strike);
+        StartUpdateBarsAnimation(target.GetWarrior().GetComponent<WarriorUISystem>());
+
+    }
+
+    private void PerformRangedAttack(CombatGridObject target) {
+        Strike strike = GetActiveWarriorClass().GenerateStrike(Strike.AttackType.Ranged);
+        TakeStrike(target, strike);
     }
 
     private void StartUpdateBarsAnimation(WarriorUISystem warriorUISystem) {
