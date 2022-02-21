@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 2571917681026336857}
   - component: {fileID: 5005177885652640771}
   m_Layer: 0
-  m_Name: SpanishInfantry
+  m_Name: SpanishCavalry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -149,7 +149,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2571917682738894786}
-  - {fileID: 4356963884425101188}
+  - {fileID: 5216153636500696637}
   - {fileID: 2571917682727128915}
   - {fileID: 2571917680804586717}
   - {fileID: 2571917681627550200}
@@ -187,16 +187,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   team: 0
   warriorName: Pedro de Alvarado
-  maxMovePoints: 30
+  maxMovePoints: 50
   maxHealth: 100
   currentHealth: 0
   maxOrderliness: 90
   meleeAttackDamagingPower: 30
   meleeAttackDisruptingPower: 10
-  rangedAttackDamagingPower: 10
-  rangedAttackDisruptingPower: 5
-  chargeMomentum: 0
-  regroupAbility: 0
+  rangedAttackDamagingPower: 0
+  rangedAttackDisruptingPower: 0
+  chargeMomentum: 3
+  regroupAbility: 20
   possibleActions: 000000000100000003000000
 --- !u!1 &2571917681413657702
 GameObject:
@@ -884,7 +884,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &7481624223022304595
+--- !u!1 &4878867893102610276
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -892,8 +892,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4356963884425101188}
-  - component: {fileID: 5855484844027005535}
+  - component: {fileID: 5216153636500696637}
+  - component: {fileID: 1927749418961462116}
   m_Layer: 0
   m_Name: UnitImage
   m_TagString: Untagged
@@ -901,28 +901,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4356963884425101188
+--- !u!4 &5216153636500696637
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7481624223022304595}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_GameObject: {fileID: 4878867893102610276}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.9188771, y: 0.9188771, z: 0.9188771}
+  m_LocalScale: {x: 0.5432, y: 0.5432, z: 0.5432}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2571917681026336856}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &5855484844027005535
+--- !u!212 &1927749418961462116
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7481624223022304595}
+  m_GameObject: {fileID: 4878867893102610276}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -957,7 +957,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b3820e03fc09b1542b5eb12731945b6c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f2e23328c0ac8cb47bb2f52ba07cc30d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
