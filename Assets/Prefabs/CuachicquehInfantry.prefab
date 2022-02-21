@@ -682,7 +682,7 @@ MonoBehaviour:
   rangedAttackDamagingPower: 0
   rangedAttackDisruptingPower: 0
   chargeMomentum: 2
-  regroupAbility: 20
+  regroupAbility: 25
   possibleActions: 000000000100000003000000
 --- !u!1 &7632051721372484155
 GameObject:
