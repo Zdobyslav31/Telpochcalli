@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BaseWarrior : MonoBehaviour {
@@ -33,7 +34,7 @@ public class BaseWarrior : MonoBehaviour {
     [SerializeField] private int chargeMomentum;
     public int regroupAbility;
     [SerializeField] public List<Action> possibleActions;
-    private int chargeSpeed;
+    public int chargeSpeed;
 
     private void Awake() {
         currentHealth = maxHealth;
@@ -76,11 +77,16 @@ public class BaseWarrior : MonoBehaviour {
     }
 
     public void AdjustChargeSpeed(List<TerrainNode> pathTraveled) {
+        TerrainNode last = pathTraveled.Last();
         foreach (TerrainNode terrainNode in pathTraveled) {
-            if (terrainNode.AllowsCharge()) {
+            bool isLastNode = terrainNode.Equals(last);
+            Debug.Log("Terrain node " + terrainNode.x + ", " + terrainNode.y);
+            if (terrainNode.AllowsCharge(isLastNode)) {
+                Debug.Log("Allows charge");
                 chargeSpeed++;
             } else {
                 chargeSpeed = 0;
+                Debug.Log("Does not allow charge");
             }
         }
     }

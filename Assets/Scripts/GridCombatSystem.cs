@@ -23,6 +23,7 @@ public class GridCombatSystem : MonoBehaviour {
     public Phase phase;
     private BaseWarrior.Action selectedAction;
     private bool isActionSelected;
+    private List<TerrainNode> ActiveWarriorTravelledPath;
 
     [SerializeField] private int activeWarriorIndex;
     [SerializeField] private List<GameObject> warriors;
@@ -70,6 +71,7 @@ public class GridCombatSystem : MonoBehaviour {
         };
         activeWarriorIndex = 0;
         isActionSelected = false;
+        ActiveWarriorTravelledPath = new List<TerrainNode>();
         UpdateAvailablePositions();
         GetActiveWarriorUISystem().SetActiveIndicatorEnabled(true);
     }
@@ -103,6 +105,7 @@ public class GridCombatSystem : MonoBehaviour {
                 Utils.ChangeButtonText(changePhaseButton, "Zakończ poruszanie");
                 break;
             case Phase.Movement:
+                GetActiveWarriorClass().AdjustChargeSpeed(ActiveWarriorTravelledPath);
                 phase = Phase.Rotation;
                 Utils.ChangeButtonText(changePhaseButton, "Zakończ obrót");
                 break;
@@ -156,6 +159,7 @@ public class GridCombatSystem : MonoBehaviour {
         }
         GetActiveWarriorClass().ResetMovePoints();
         GetActiveWarriorUISystem().SetActiveIndicatorEnabled(true);
+        ActiveWarriorTravelledPath = new List<TerrainNode>();
     }
 
     private void ActivateSelectActionPanel() {
@@ -351,7 +355,7 @@ public class GridCombatSystem : MonoBehaviour {
             GetActiveWarriorUISystem().StartMoveThroughPath(pathCoords, ReportMoveAnimationFinished);
             battleState = BattleState.Busy;
             GetActiveWarriorClass().UseMovePoints(distance);
-            GetActiveWarriorClass().AdjustChargeSpeed(pathNodes.Skip(1).ToList<TerrainNode>());
+            ActiveWarriorTravelledPath.AddRange(pathNodes.Skip(1).ToList<TerrainNode>());
         }
     }
 

@@ -64,8 +64,11 @@ public class TerrainNode {
         return terrainType;
     }
 
-    public bool AllowsCharge() {
-        return (GetTerrainType() == TerrainNode.TerrainType.Normal);
+    public bool AllowsCharge(bool isLastNode) {
+        return (
+            GetTerrainType() == TerrainNode.TerrainType.Normal
+            && (isLastNode || !isEndangered)
+            );
     }
 
     public override string ToString() {
