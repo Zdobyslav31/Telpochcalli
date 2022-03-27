@@ -7,6 +7,7 @@ using UnityEngine;
 public class TerrainMap {
     private int MOVE_STRAIGHT_COST = 10;
     private int MOVE_DIAGONAL_COST = 14;
+    private int CONTROL_ZONE_PENALTY = 7;
     private Dictionary<TerrainNode.TerrainType, int> terrainCostMultipliers;
 
     private Grid<TerrainNode> grid;
@@ -221,13 +222,14 @@ public class TerrainMap {
             Debug.LogWarning("Tried to calculate neigbour distance cost for nodes that are not neighbours");
             return CalculateTentativeDistanceCost(a, b);
         }
+        int penalty = a.isEndangered ? CONTROL_ZONE_PENALTY : 0;
         int terrainCostMultiplier = (
                 GetTerrainCostMultiplier(b.GetTerrainType()) + GetTerrainCostMultiplier(a.GetTerrainType())
             ) / 2;
         if (a.x == b.x || a.y == b.y) {
-            return MOVE_STRAIGHT_COST * terrainCostMultiplier;
+            return MOVE_STRAIGHT_COST * terrainCostMultiplier + penalty;
         } else {
-            return MOVE_DIAGONAL_COST * terrainCostMultiplier;
+            return MOVE_DIAGONAL_COST * terrainCostMultiplier + penalty;
         }
     }
 

@@ -34,7 +34,7 @@ public class BaseWarrior : MonoBehaviour {
     [SerializeField] private int chargeMomentum;
     public int regroupAbility;
     [SerializeField] public List<Action> possibleActions;
-    public int chargeSpeed;
+    private int chargeSpeed;
 
     private void Awake() {
         currentHealth = maxHealth;
