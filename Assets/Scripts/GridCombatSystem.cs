@@ -209,10 +209,11 @@ public class GridCombatSystem : MonoBehaviour {
 
         for (int x = unitX - movePoints / 10; x <= unitX + movePoints / 10; x++) {
             for (int y = unitY - movePoints; y <= unitY + movePoints; y++) {
-                if (IsMoveAvailable(x, y, out List<TerrainNode> _, out int _)) {
+                if (IsMoveAvailable(x, y, out List<TerrainNode> path, out int _)) {
                     numberOfWalkableFields++;
+                    AvailablePositionsTilemapObject.TilemapSprite sprite = path.Last().isEndangered ? AvailablePositionsTilemapObject.TilemapSprite.MoveEndangered : AvailablePositionsTilemapObject.TilemapSprite.Move;
                     GetAvailPosTilemap().SetTilemapSprite(
-                        x, y, AvailablePositionsTilemapObject.TilemapSprite.Move
+                        x, y, sprite
                     );
                 }
             }

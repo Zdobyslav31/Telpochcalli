@@ -1458,6 +1458,9 @@ MonoBehaviour:
   - tilemapSprite: 6
     uv00Pixels: {x: 251, y: 1}
     uv11Pixels: {x: 499, y: 249}
+  - tilemapSprite: 7
+    uv00Pixels: {x: 501, y: 1}
+    uv11Pixels: {x: 749, y: 249}
 --- !u!23 &821530052
 MeshRenderer:
   m_ObjectHideFlags: 0
