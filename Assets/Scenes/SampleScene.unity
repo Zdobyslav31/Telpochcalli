@@ -2584,6 +2584,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpanishInfantry
       objectReference: {fileID: 0}
+    - target: {fileID: 5005177885652640771, guid: 1fb9a7932d7cdb6438206b616ed8a14c, type: 3}
+      propertyPath: possibleActions.Array.data[2]
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1fb9a7932d7cdb6438206b616ed8a14c, type: 3}
 --- !u!1001 &5648030565236779888
