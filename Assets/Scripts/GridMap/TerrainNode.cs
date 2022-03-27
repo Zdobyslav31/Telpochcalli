@@ -62,6 +62,10 @@ public class TerrainNode {
         return terrainType;
     }
 
+    public bool AllowsCharge() {
+        return (GetTerrainType() == TerrainNode.TerrainType.Normal);
+    }
+
     public override string ToString() {
         if (blocksSight) {
             return "X";

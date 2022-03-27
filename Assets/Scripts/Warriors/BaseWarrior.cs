@@ -77,7 +77,7 @@ public class BaseWarrior : MonoBehaviour {
 
     public void AdjustChargeSpeed(List<TerrainNode> pathTraveled) {
         foreach (TerrainNode terrainNode in pathTraveled) {
-            if (terrainNode.GetTerrainType() == TerrainNode.TerrainType.Normal) {
+            if (terrainNode.AllowsCharge()) {
                 chargeSpeed++;
             } else {
                 chargeSpeed = 0;
