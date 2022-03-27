@@ -105,7 +105,9 @@ public class GridCombatSystem : MonoBehaviour {
                 Utils.ChangeButtonText(changePhaseButton, "Zakończ poruszanie");
                 break;
             case Phase.Movement:
-                GetActiveWarriorClass().AdjustChargeSpeed(ActiveWarriorTravelledPath);
+                if (ActiveWarriorTravelledPath.Any()) {
+                    GetActiveWarriorClass().AdjustChargeSpeed(ActiveWarriorTravelledPath);
+                }
                 phase = Phase.Rotation;
                 Utils.ChangeButtonText(changePhaseButton, "Zakończ obrót");
                 break;
