@@ -49,26 +49,28 @@ public class GameHandler : MonoBehaviour {
 
     void Update() {
 
-
-        if (Input.GetMouseButtonDown(1)) {
+        if (Input.GetKeyDown(KeyCode.N)) {
+            terrainType = TerrainNode.TerrainType.Normal;
             Vector3 mouseWorldPosition = UtilsClass.GetMouseWorldPosition();
             terrainTilemap.SetTerrainType(mouseWorldPosition, terrainType);
         }
 
-        if (Input.GetKeyDown(KeyCode.N)) {
-            terrainType = TerrainNode.TerrainType.Normal;
-        }
-
         if (Input.GetKeyDown(KeyCode.D)) {
             terrainType = TerrainNode.TerrainType.Difficult;
+            Vector3 mouseWorldPosition = UtilsClass.GetMouseWorldPosition();
+            terrainTilemap.SetTerrainType(mouseWorldPosition, terrainType);
         }
 
         if (Input.GetKeyDown(KeyCode.U)) {
             terrainType = TerrainNode.TerrainType.Unwalkable;
+            Vector3 mouseWorldPosition = UtilsClass.GetMouseWorldPosition();
+            terrainTilemap.SetTerrainType(mouseWorldPosition, terrainType);
         }
 
         if (Input.GetKeyDown(KeyCode.S)) {
             terrainType = TerrainNode.TerrainType.Sand;
+            Vector3 mouseWorldPosition = UtilsClass.GetMouseWorldPosition();
+            terrainTilemap.SetTerrainType(mouseWorldPosition, terrainType);
         }
 
     }

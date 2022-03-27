@@ -56,7 +56,8 @@ public class AvailablePositionsTilemapObject {
         RotateS,
         RotateW,
         RotateE,
-        Attack
+        Attack,
+        MoveEndangered
     }
 
     private Grid<AvailablePositionsTilemapObject> grid;

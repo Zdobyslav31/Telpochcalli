@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BaseWarrior : MonoBehaviour {
@@ -32,13 +33,15 @@ public class BaseWarrior : MonoBehaviour {
     [SerializeField] private int rangedAttackDisruptingPower;
     [SerializeField] private int chargeMomentum;
     public int regroupAbility;
-    [SerializeField] public List<Action> possibleActions;
+    [SerializeField] private List<Action> possibleActions;
     private int chargeSpeed;
+    private bool fightBound;
 
     private void Awake() {
         currentHealth = maxHealth;
         currentOrderliness = maxOrderliness;
         chargeSpeed = 0;
+        fightBound = false;
         ResetMovePoints();
     }
 
@@ -66,6 +69,10 @@ public class BaseWarrior : MonoBehaviour {
         return chargeMomentum;
     }
 
+    public void SetFightBound(bool value) {
+        fightBound = value;
+    }
+
     public void UseMovePoints(int movePoints) {
         currentMovePoints = Math.Clamp(currentMovePoints - movePoints, 0, maxMovePoints);
     }
@@ -76,8 +83,10 @@ public class BaseWarrior : MonoBehaviour {
     }
 
     public void AdjustChargeSpeed(List<TerrainNode> pathTraveled) {
+        TerrainNode last = pathTraveled.Last();
         foreach (TerrainNode terrainNode in pathTraveled) {
-            if (terrainNode.GetTerrainType() == TerrainNode.TerrainType.Normal) {
+            bool isLastNode = terrainNode.Equals(last);
+            if (terrainNode.AllowsCharge(isLastNode)) {
                 chargeSpeed++;
             } else {
                 chargeSpeed = 0;
@@ -133,14 +142,16 @@ public class BaseWarrior : MonoBehaviour {
     }
 
     public bool IsActionPossible(Action action) {
-        if (possibleActions.Contains(action)) {
-            if(action == Action.Charge) {
-                return (chargeSpeed >= MIN_DISTANCE_FOR_CHARGE);
-            }
-            return true;
-        } else {
+        if (!possibleActions.Contains(action)) {
             return false;
         }
+        if (action == Action.Charge) {
+            return (chargeSpeed >= MIN_DISTANCE_FOR_CHARGE);
+        }
+        if (fightBound && (action == Action.Shoot || action == Action.Regroup)) {
+            return false;
+        }
+        return true;
     }
 }
 

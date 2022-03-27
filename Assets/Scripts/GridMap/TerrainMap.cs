@@ -7,6 +7,7 @@ using UnityEngine;
 public class TerrainMap {
     private int MOVE_STRAIGHT_COST = 10;
     private int MOVE_DIAGONAL_COST = 14;
+    private int CONTROL_ZONE_PENALTY = 7;
     private Dictionary<TerrainNode.TerrainType, int> terrainCostMultipliers;
 
     private Grid<TerrainNode> grid;
@@ -136,8 +137,10 @@ public class TerrainMap {
 
     public List<TerrainNode> FindPath(
             int startX, int startY, int endX, int endY, out int pathDistance,
-            List<TerrainNode> additionalUnwalkableNodes = null
+            List<TerrainNode> additionalUnwalkableNodes = null,
+            List<TerrainNode> endangeredNodes = null
         ) {
+        ResetEndangeredNodes(endangeredNodes);
         TerrainNode startNode = grid.GetGridObject(startX, startY);
         TerrainNode endNode = grid.GetGridObject(endX, endY);
 
@@ -219,13 +222,14 @@ public class TerrainMap {
             Debug.LogWarning("Tried to calculate neigbour distance cost for nodes that are not neighbours");
             return CalculateTentativeDistanceCost(a, b);
         }
+        int penalty = a.isEndangered ? CONTROL_ZONE_PENALTY : 0;
         int terrainCostMultiplier = (
                 GetTerrainCostMultiplier(b.GetTerrainType()) + GetTerrainCostMultiplier(a.GetTerrainType())
             ) / 2;
         if (a.x == b.x || a.y == b.y) {
-            return MOVE_STRAIGHT_COST * terrainCostMultiplier;
+            return MOVE_STRAIGHT_COST * terrainCostMultiplier + penalty;
         } else {
-            return MOVE_DIAGONAL_COST * terrainCostMultiplier;
+            return MOVE_DIAGONAL_COST * terrainCostMultiplier + penalty;
         }
     }
 
@@ -237,6 +241,19 @@ public class TerrainMap {
             }
         }
         return lowestFCostNode;
+    }
+
+    private void ResetEndangeredNodes(List<TerrainNode> endangeredNodes) {
+        for (int x = 0; x < grid.GetWidth(); x++) {
+            for (int y = 0; y < grid.GetHeight(); y++) {
+                GetNode(x, y).isEndangered = false;
+                grid.TriggerGridObjectChanged(x, y);
+            }
+        }
+        foreach (TerrainNode terrainNode in endangeredNodes) {
+            terrainNode.isEndangered = true;
+            grid.TriggerGridObjectChanged(terrainNode.x, terrainNode.y);
+        }
     }
 
     public TerrainNode GetNode(int x, int y) {

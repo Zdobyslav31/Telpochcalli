@@ -23,6 +23,7 @@ public class GridCombatSystem : MonoBehaviour {
     public Phase phase;
     private BaseWarrior.Action selectedAction;
     private bool isActionSelected;
+    private List<TerrainNode> ActiveWarriorTravelledPath;
 
     [SerializeField] private int activeWarriorIndex;
     [SerializeField] private List<GameObject> warriors;
@@ -70,6 +71,7 @@ public class GridCombatSystem : MonoBehaviour {
         };
         activeWarriorIndex = 0;
         isActionSelected = false;
+        ActiveWarriorTravelledPath = new List<TerrainNode>();
         UpdateAvailablePositions();
         GetActiveWarriorUISystem().SetActiveIndicatorEnabled(true);
     }
@@ -103,6 +105,9 @@ public class GridCombatSystem : MonoBehaviour {
                 Utils.ChangeButtonText(changePhaseButton, "Zakończ poruszanie");
                 break;
             case Phase.Movement:
+                if (ActiveWarriorTravelledPath.Any()) {
+                    GetActiveWarriorClass().AdjustChargeSpeed(ActiveWarriorTravelledPath);
+                }
                 phase = Phase.Rotation;
                 Utils.ChangeButtonText(changePhaseButton, "Zakończ obrót");
                 break;
@@ -120,6 +125,7 @@ public class GridCombatSystem : MonoBehaviour {
                 break;
         }
         UpdateAvailablePositions();
+        UpdateFightBoundStatuses();
     }
 
     public void ReportMoveAnimationFinished() {
@@ -155,6 +161,7 @@ public class GridCombatSystem : MonoBehaviour {
         }
         GetActiveWarriorClass().ResetMovePoints();
         GetActiveWarriorUISystem().SetActiveIndicatorEnabled(true);
+        ActiveWarriorTravelledPath = new List<TerrainNode>();
     }
 
     private void ActivateSelectActionPanel() {
@@ -209,10 +216,11 @@ public class GridCombatSystem : MonoBehaviour {
 
         for (int x = unitX - movePoints / 10; x <= unitX + movePoints / 10; x++) {
             for (int y = unitY - movePoints; y <= unitY + movePoints; y++) {
-                if (IsMoveAvailable(x, y, out List<TerrainNode> _, out int _)) {
+                if (IsMoveAvailable(x, y, out List<TerrainNode> path, out int _)) {
                     numberOfWalkableFields++;
+                    AvailablePositionsTilemapObject.TilemapSprite sprite = path.Last().isEndangered ? AvailablePositionsTilemapObject.TilemapSprite.MoveEndangered : AvailablePositionsTilemapObject.TilemapSprite.Move;
                     GetAvailPosTilemap().SetTilemapSprite(
-                        x, y, AvailablePositionsTilemapObject.TilemapSprite.Move
+                        x, y, sprite
                     );
                 }
             }
@@ -250,6 +258,15 @@ public class GridCombatSystem : MonoBehaviour {
             GetAvailPosTilemap().SetTilemapSprite(
                 target.x, target.y, AvailablePositionsTilemapObject.TilemapSprite.Attack
             );
+        }
+    }
+
+    private void UpdateFightBoundStatuses() {
+        foreach(GameObject warrior in warriors) {
+            BaseWarrior.Team team = warrior.GetComponent<BaseWarrior>().team;
+            GetWarriorCoordinates(warrior, out int x, out int y);
+            bool isFightBound = GetFieldsInControlZoneOfTeam(OppositeTeam(team)).Contains(GetCombatGrid().GetGridObject(x, y));
+            warrior.GetComponent<BaseWarrior>().SetFightBound(isFightBound);
         }
     }
 
@@ -297,10 +314,10 @@ public class GridCombatSystem : MonoBehaviour {
             return false;
         }
         GetActiveWarriorCoordinates(out int activeWarriorX, out int activeWarriorY);
-
         List<TerrainNode> pathNodes = GetTerrainMap().FindPath(
                 activeWarriorX, activeWarriorY, x, y, out distance,
-                GetTerrainNodesOcuppiedByInactiveTeam()
+                GetTerrainNodesOcuppiedByInactiveTeam(),
+                GetTerrainNodesInControlZoneOfTeam(OppositeTeam(GetActiveTeam()))
             );
         if (pathNodes == null) {
             // No valid path
@@ -337,7 +354,7 @@ public class GridCombatSystem : MonoBehaviour {
             GetActiveWarriorUISystem().StartMoveThroughPath(pathCoords, ReportMoveAnimationFinished);
             battleState = BattleState.Busy;
             GetActiveWarriorClass().UseMovePoints(distance);
-            GetActiveWarriorClass().AdjustChargeSpeed(pathNodes.Skip(1).ToList<TerrainNode>());
+            ActiveWarriorTravelledPath.AddRange(pathNodes.Skip(1).ToList<TerrainNode>());
         }
     }
 
@@ -537,6 +554,45 @@ public class GridCombatSystem : MonoBehaviour {
         return GetFieldsInRear(field.x, field.y, direction);
     }
 
+    private List<CombatGridObject> GetFieldsInControlZone(int x, int y, WarriorUISystem.Direction direction) {
+        List<CombatGridObject> fieldsList = new List<CombatGridObject>();
+        switch (direction) {
+            case WarriorUISystem.Direction.N:
+                fieldsList.Add(GetCombatGrid().GetGridObject(x, y + 1));
+                fieldsList.Add(GetCombatGrid().GetGridObject(x - 1, y + 1));
+                fieldsList.Add(GetCombatGrid().GetGridObject(x + 1, y + 1));
+                fieldsList.Add(GetCombatGrid().GetGridObject(x - 1, y));
+                fieldsList.Add(GetCombatGrid().GetGridObject(x + 1, y));
+                break;
+            case WarriorUISystem.Direction.S:
+                fieldsList.Add(GetCombatGrid().GetGridObject(x, y - 1));
+                fieldsList.Add(GetCombatGrid().GetGridObject(x - 1, y - 1));
+                fieldsList.Add(GetCombatGrid().GetGridObject(x + 1, y - 1));
+                fieldsList.Add(GetCombatGrid().GetGridObject(x - 1, y));
+                fieldsList.Add(GetCombatGrid().GetGridObject(x + 1, y));
+                break;
+            case WarriorUISystem.Direction.W:
+                fieldsList.Add(GetCombatGrid().GetGridObject(x - 1, y));
+                fieldsList.Add(GetCombatGrid().GetGridObject(x - 1, y + 1));
+                fieldsList.Add(GetCombatGrid().GetGridObject(x - 1, y - 1));
+                fieldsList.Add(GetCombatGrid().GetGridObject(x, y - 1));
+                fieldsList.Add(GetCombatGrid().GetGridObject(x, y + 1));
+                break;
+            case WarriorUISystem.Direction.E:
+                fieldsList.Add(GetCombatGrid().GetGridObject(x + 1, y));
+                fieldsList.Add(GetCombatGrid().GetGridObject(x + 1, y + 1));
+                fieldsList.Add(GetCombatGrid().GetGridObject(x + 1, y - 1));
+                fieldsList.Add(GetCombatGrid().GetGridObject(x, y - 1));
+                fieldsList.Add(GetCombatGrid().GetGridObject(x, y + 1));
+                break;
+        }
+        return fieldsList;
+    }
+
+    private List<CombatGridObject> GetFieldsInControlZone(CombatGridObject field, WarriorUISystem.Direction direction) {
+        return GetFieldsInControlZone(field.x, field.y, direction);
+    }
+
     private List<TerrainNode> GetTerrainNodesOcuppiedByInactiveTeam() {
         BaseWarrior.Team team = OppositeTeam(GetActiveTeam());
         List<CombatGridObject> gridObjects = GetFieldsOccupiedByTeam(team);
@@ -544,6 +600,23 @@ public class GridCombatSystem : MonoBehaviour {
         foreach (CombatGridObject gridObject in gridObjects) {
             terrainNodes.Add(GetTerrainMap().GetGrid().GetGridObject(gridObject.x, gridObject.y));
         }
+        return terrainNodes;
+    }
+
+    private List<CombatGridObject> GetFieldsInControlZoneOfTeam(BaseWarrior.Team team) {
+        List<CombatGridObject> warriorsLocations = GetFieldsOccupiedByTeam(team);
+        List<CombatGridObject> controlledFields = new List<CombatGridObject>();
+        foreach (CombatGridObject warriorLocation in warriorsLocations) {
+            controlledFields.AddRange(GetFieldsInControlZone(warriorLocation, warriorLocation.GetWarrior().GetComponent<WarriorUISystem>().direction));
+        }
+        return controlledFields;
+    }
+
+    private List<TerrainNode> GetTerrainNodesInControlZoneOfTeam(BaseWarrior.Team team) {
+        List<TerrainNode> terrainNodes = new List<TerrainNode>();
+        foreach (CombatGridObject gridObject in GetFieldsInControlZoneOfTeam(team)) {
+            terrainNodes.Add(GetTerrainMap().GetGrid().GetGridObject(gridObject.x, gridObject.y));
+        } // TODO: refactor - GetTerrainNode(GridObject) to separate function
         return terrainNodes;
     }
 
