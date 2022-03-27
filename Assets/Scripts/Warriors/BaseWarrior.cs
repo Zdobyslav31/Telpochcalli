@@ -33,13 +33,15 @@ public class BaseWarrior : MonoBehaviour {
     [SerializeField] private int rangedAttackDisruptingPower;
     [SerializeField] private int chargeMomentum;
     public int regroupAbility;
-    [SerializeField] public List<Action> possibleActions;
+    [SerializeField] private List<Action> possibleActions;
     private int chargeSpeed;
+    private bool fightBound;
 
     private void Awake() {
         currentHealth = maxHealth;
         currentOrderliness = maxOrderliness;
         chargeSpeed = 0;
+        fightBound = false;
         ResetMovePoints();
     }
 
@@ -65,6 +67,10 @@ public class BaseWarrior : MonoBehaviour {
 
     public int GetChargeMomentum() {
         return chargeMomentum;
+    }
+
+    public void SetFightBound(bool value) {
+        fightBound = value;
     }
 
     public void UseMovePoints(int movePoints) {
@@ -136,14 +142,16 @@ public class BaseWarrior : MonoBehaviour {
     }
 
     public bool IsActionPossible(Action action) {
-        if (possibleActions.Contains(action)) {
-            if(action == Action.Charge) {
-                return (chargeSpeed >= MIN_DISTANCE_FOR_CHARGE);
-            }
-            return true;
-        } else {
+        if (!possibleActions.Contains(action)) {
             return false;
         }
+        if (action == Action.Charge) {
+            return (chargeSpeed >= MIN_DISTANCE_FOR_CHARGE);
+        }
+        if (fightBound && (action == Action.Shoot || action == Action.Regroup)) {
+            return false;
+        }
+        return true;
     }
 }
 

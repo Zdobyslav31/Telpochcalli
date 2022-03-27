@@ -263,11 +263,8 @@ public class GridCombatSystem : MonoBehaviour {
         foreach(GameObject warrior in warriors) {
             BaseWarrior.Team team = warrior.GetComponent<BaseWarrior>().team;
             GetWarriorCoordinates(warrior, out int x, out int y);
-            if (GetFieldsInControlZoneOfTeam(OppositeTeam(team)).Contains(GetCombatGrid().GetGridObject(x, y))) {
-                warrior.GetComponent<WarriorUISystem>().FightBound = true;
-            } else {
-                warrior.GetComponent<WarriorUISystem>().FightBound = false;
-            }
+            bool isFightBound = GetFieldsInControlZoneOfTeam(OppositeTeam(team)).Contains(GetCombatGrid().GetGridObject(x, y));
+            warrior.GetComponent<BaseWarrior>().SetFightBound(isFightBound);
         }
     }
 

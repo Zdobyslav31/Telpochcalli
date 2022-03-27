@@ -11,7 +11,6 @@ public class WarriorUISystem : MonoBehaviour {
         E
     }
     public Direction direction;
-    public bool FightBound;
     private enum WarriorState {
         Moving,
         UpdatingBars,
@@ -44,7 +43,6 @@ public class WarriorUISystem : MonoBehaviour {
             { Direction.E, Quaternion.Euler(0, 0, 270f) },
     };
         warriorState = WarriorState.Idle;
-        FightBound = false;
         warriorModel = this.GetComponent<BaseWarrior>();
         UpdateDirectionArrow();
     }
