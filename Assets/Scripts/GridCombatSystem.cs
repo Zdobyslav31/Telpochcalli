@@ -120,6 +120,7 @@ public class GridCombatSystem : MonoBehaviour {
                 break;
         }
         UpdateAvailablePositions();
+        UpdateFightBoundStatuses();
     }
 
     public void ReportMoveAnimationFinished() {
@@ -254,6 +255,18 @@ public class GridCombatSystem : MonoBehaviour {
         }
     }
 
+    private void UpdateFightBoundStatuses() {
+        foreach(GameObject warrior in warriors) {
+            BaseWarrior.Team team = warrior.GetComponent<BaseWarrior>().team;
+            GetWarriorCoordinates(warrior, out int x, out int y);
+            if (GetFieldsInControlZoneOfTeam(OppositeTeam(team)).Contains(GetCombatGrid().GetGridObject(x, y))) {
+                warrior.GetComponent<WarriorUISystem>().FightBound = true;
+            } else {
+                warrior.GetComponent<WarriorUISystem>().FightBound = false;
+            }
+        }
+    }
+
     private List<CombatGridObject> GetAvailableMeleeAttackTargetPositions() {
         List<CombatGridObject> availableTargets = new List<CombatGridObject>();
         GetActiveWarriorCoordinates(out int activeWarriorX, out int activeWarriorY);
@@ -301,7 +314,7 @@ public class GridCombatSystem : MonoBehaviour {
         List<TerrainNode> pathNodes = GetTerrainMap().FindPath(
                 activeWarriorX, activeWarriorY, x, y, out distance,
                 GetTerrainNodesOcuppiedByInactiveTeam(),
-                GetTerrainNodesInControlZoneOfInactiveTeam()
+                GetTerrainNodesInControlZoneOfTeam(OppositeTeam(GetActiveTeam()))
             );
         if (pathNodes == null) {
             // No valid path
@@ -587,19 +600,18 @@ public class GridCombatSystem : MonoBehaviour {
         return terrainNodes;
     }
 
-    private List<CombatGridObject> GetFieldsInControlZoneOfInactiveTeam() {
-        BaseWarrior.Team team = OppositeTeam(GetActiveTeam());
-        List<CombatGridObject> gridObjects = GetFieldsOccupiedByTeam(team);
+    private List<CombatGridObject> GetFieldsInControlZoneOfTeam(BaseWarrior.Team team) {
+        List<CombatGridObject> warriorsLocations = GetFieldsOccupiedByTeam(team);
         List<CombatGridObject> controlledFields = new List<CombatGridObject>();
-        foreach (CombatGridObject gridObject in gridObjects) {
-            controlledFields.AddRange(GetFieldsInControlZone(gridObject, gridObject.GetWarrior().GetComponent<WarriorUISystem>().direction));
+        foreach (CombatGridObject warriorLocation in warriorsLocations) {
+            controlledFields.AddRange(GetFieldsInControlZone(warriorLocation, warriorLocation.GetWarrior().GetComponent<WarriorUISystem>().direction));
         }
         return controlledFields;
     }
 
-    private List<TerrainNode> GetTerrainNodesInControlZoneOfInactiveTeam() {
+    private List<TerrainNode> GetTerrainNodesInControlZoneOfTeam(BaseWarrior.Team team) {
         List<TerrainNode> terrainNodes = new List<TerrainNode>();
-        foreach (CombatGridObject gridObject in GetFieldsInControlZoneOfInactiveTeam()) {
+        foreach (CombatGridObject gridObject in GetFieldsInControlZoneOfTeam(team)) {
             terrainNodes.Add(GetTerrainMap().GetGrid().GetGridObject(gridObject.x, gridObject.y));
         } // TODO: refactor - GetTerrainNode(GridObject) to separate function
         return terrainNodes;
