@@ -80,13 +80,10 @@ public class BaseWarrior : MonoBehaviour {
         TerrainNode last = pathTraveled.Last();
         foreach (TerrainNode terrainNode in pathTraveled) {
             bool isLastNode = terrainNode.Equals(last);
-            Debug.Log("Terrain node " + terrainNode.x + ", " + terrainNode.y);
             if (terrainNode.AllowsCharge(isLastNode)) {
-                Debug.Log("Allows charge");
                 chargeSpeed++;
             } else {
                 chargeSpeed = 0;
-                Debug.Log("Does not allow charge");
             }
         }
     }
