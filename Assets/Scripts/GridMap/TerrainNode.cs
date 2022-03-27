@@ -26,6 +26,7 @@ public class TerrainNode {
     public int fCost; // g + h
 
     public bool isWalkable;
+    public bool isEndangered;
 
     // Line of sight
     public bool isVisible; // TODO: visibility levels
@@ -38,6 +39,7 @@ public class TerrainNode {
         this.x = x;
         this.y = y;
         this.isWalkable = true;
+        this.isEndangered = false;
         this.blocksSight = false;
         this.terrainType = TerrainType.Normal;
     }
@@ -70,7 +72,7 @@ public class TerrainNode {
         if (blocksSight) {
             return "X";
         } else {
-            if (isVisible) {
+            if (!isEndangered) {
                 return x + "," + y;
             }
             return "[" + x + "," + y + "]";
