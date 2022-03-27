@@ -487,6 +487,7 @@ public class GridCombatSystem : MonoBehaviour {
                 fieldsList.Add(GetCombatGrid().GetGridObject(x + 1, y - 1));
                 break;
         }
+        fieldsList.RemoveAll(item => item is null);
         return fieldsList;
     }
 
@@ -522,13 +523,13 @@ public class GridCombatSystem : MonoBehaviour {
                 fieldsList.Add(GetCombatGrid().GetGridObject(x - 1, y + 1));
                 break;
         }
+        fieldsList.RemoveAll(item => item is null);
         return fieldsList;
     }
 
     private List<CombatGridObject> GetFieldsInFlank(CombatGridObject field, WarriorUISystem.Direction direction) {
         return GetFieldsInFlank(field.x, field.y, direction);
     }
-
 
     private List<CombatGridObject> GetFieldsInRear(int x, int y, WarriorUISystem.Direction direction) {
 
@@ -547,6 +548,7 @@ public class GridCombatSystem : MonoBehaviour {
                 fieldsList.Add(GetCombatGrid().GetGridObject(x - 1, y));
                 break;
         }
+        fieldsList.RemoveAll(item => item is null);
         return fieldsList;
     }
 
@@ -586,6 +588,7 @@ public class GridCombatSystem : MonoBehaviour {
                 fieldsList.Add(GetCombatGrid().GetGridObject(x, y + 1));
                 break;
         }
+        fieldsList.RemoveAll(item => item is null);
         return fieldsList;
     }
 
