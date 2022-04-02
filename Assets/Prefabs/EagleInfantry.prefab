@@ -654,6 +654,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 167aba9f8dbf3724ba63a0c0654b80f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  team: 1
   direction: 2
   healthBarIndicator: {fileID: 8720158344009065598}
   orderlinessBarIndicator: {fileID: 2191521786394933352}
@@ -671,7 +672,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5032f4d4c0b37ab4ea160d04eac5f3dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  team: 1
   warriorName: Yaotl
   maxMovePoints: 35
   maxHealth: 100

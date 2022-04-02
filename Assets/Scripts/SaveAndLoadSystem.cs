@@ -18,7 +18,7 @@ public class SaveAndLoadSystem
                     terrainType = GameHandler.Instance.GetTerrainTilemap().GetTerrainType(x, y),
                     warrior = warrior ? new WarriorSaveObject {
                         unit = warrior.name,
-                        team = warrior.GetComponent<BaseWarrior>().team,
+                        team = warrior.GetComponent<WarriorUISystem>().team,
                         direction = warrior.GetComponent<WarriorUISystem>().direction
                     } : null
                 };
@@ -66,7 +66,7 @@ public class SaveAndLoadSystem
     [System.Serializable]
     private class WarriorSaveObject {
         public string unit;
-        public BaseWarrior.Team team;
+        public WarriorUISystem.Team team;
         public WarriorUISystem.Direction direction;
     }
 }
