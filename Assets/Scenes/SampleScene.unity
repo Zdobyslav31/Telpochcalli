@@ -711,6 +711,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   phase: 0
+  warriorsToDeploy:
+  - {fileID: 5648030565311808837, guid: 0aa0765b4aba0d0499bdb5ebe9c16a68, type: 3}
+  - {fileID: 5648030565311808837, guid: dad604ea9283e8944907ed7191337f75, type: 3}
   activeWarriorIndex: 0
   warriors:
   - {fileID: 1132575924}

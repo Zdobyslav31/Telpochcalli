@@ -6,6 +6,17 @@ using UnityEngine;
 public class CombatGridManager {
     private int LAYER_Z_ALT = -3;
 
+    public GameObject SpawnWarrior(GameObject warriorPrefab, Vector3 position) {
+        CombatGridObject field = GetCombatGrid().GetGridObject(position);
+        if(field.GetWarrior() || !GetTerrainMap().GetNode(field.x, field.y).isWalkable) {
+            return null;
+        }
+        Quaternion rot = Quaternion.Euler(0, 0, 0);
+        GameObject warrior = UnityEngine.Object.Instantiate(warriorPrefab, GetWorldPositionOnWarriorsLayer(field.x, field.y), rot);
+        field.SetWarrior(warrior);
+        return warrior;
+    }
+
     public bool MoveWarriorOnGrid(GameObject activeWarrior, Vector3 targetPosition, Action onMoveComplete, out int distance, out List<TerrainNode> pathNodes) {
         if (IsMoveAvailable(targetPosition, activeWarrior, out pathNodes, out distance)) {
             Vector3[] pathCoords = new Vector3[pathNodes.Count];
@@ -96,11 +107,6 @@ public class CombatGridManager {
         GetCombatGrid().GetGridPosition(position, out int x, out int y);
         bool result = IsMoveAvailable(x, y, activeWarrior, out movePath, out distance);
         return result;
-    }
-
-    public Vector3 GetWorldPositionOnWarriorsLayer(int x, int y) {
-        Vector3 cellOriginCoords = GetCombatGrid().GetWorldPosition(x, y);
-        return cellOriginCoords + new Vector3(GameHandler.Instance.getCellSize() * .5f, GameHandler.Instance.getCellSize() * .5f, LAYER_Z_ALT);
     }
 
     public void GetWarriorCoordinates(GameObject warrior, out int x, out int y) {
@@ -296,6 +302,11 @@ public class CombatGridManager {
 
     private List<CombatGridObject> GetFieldsInControlZone(CombatGridObject field, WarriorUISystem.Direction direction) {
         return GetFieldsInControlZone(field.x, field.y, direction);
+    }
+
+    private Vector3 GetWorldPositionOnWarriorsLayer(int x, int y) {
+        Vector3 cellOriginCoords = GetCombatGrid().GetWorldPosition(x, y);
+        return cellOriginCoords + new Vector3(GameHandler.Instance.getCellSize() * .5f, GameHandler.Instance.getCellSize() * .5f, LAYER_Z_ALT);
     }
 
     private List<TerrainNode> ToTerrainNodes(List<CombatGridObject> gridObjects) {

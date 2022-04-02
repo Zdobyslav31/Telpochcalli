@@ -22,6 +22,7 @@ public class CombatSystem : MonoBehaviour {
     private bool isActionSelected;
     private List<TerrainNode> ActiveWarriorTravelledPath;
 
+    public List<GameObject> warriorsToDeploy;
     [SerializeField] private int activeWarriorIndex;
     [SerializeField] private List<GameObject> warriors;
     [SerializeField] private GameObject changePhaseButton;
@@ -52,7 +53,7 @@ public class CombatSystem : MonoBehaviour {
 
     private void Start() {
         battleState = BattleState.Idle;
-        phase = Phase.Movement; // TODO: change to SettingUp when implemented
+        phase = Phase.SettingUp;
         foreach (GameObject warrior in warriors) {
             Vector3 warriorPosition = warrior.transform.position;
             GetCombatGrid().GetGridObject(warriorPosition).SetWarrior(warrior);
@@ -86,6 +87,7 @@ public class CombatSystem : MonoBehaviour {
     public void HandleClickOnGrid(Vector3 targetPosition) {
         switch (phase) {
             case Phase.SettingUp:
+                SpawnWarrior(targetPosition);
                 break;
             case Phase.Movement:
                 MoveActiveWarrior(targetPosition);
@@ -181,7 +183,6 @@ public class CombatSystem : MonoBehaviour {
         }
     }
 
-
     private void UpdateAvailablePositions() {
 
         switch (phase) {
@@ -214,7 +215,6 @@ public class CombatSystem : MonoBehaviour {
         }
     }
 
-
     private void UpdateFightBoundStatuses() {
         foreach(GameObject warrior in warriors) {
             WarriorUISystem.Team team = warrior.GetComponent<WarriorUISystem>().team;
@@ -224,6 +224,17 @@ public class CombatSystem : MonoBehaviour {
         }
     }
 
+    private void SpawnWarrior(Vector3 position) {
+        GameObject warriorPrefab = warriorsToDeploy[0];
+        GameObject warrior = combatGridManager.SpawnWarrior(warriorPrefab, position);
+        if (warrior is null) {
+            Debug.Log("Invalid target field!");
+            return;
+        }
+        warriorsToDeploy.RemoveAt(0);
+        warriors.Add(warrior);
+        if (warriorsToDeploy.Count < 1) ChangePhase();
+    }
 
     private void MoveActiveWarrior(Vector3 targetPosition) {
         if (battleState == BattleState.Busy) {
@@ -267,12 +278,8 @@ public class CombatSystem : MonoBehaviour {
             CombatGridObject target = GetCombatGrid().GetGridObject(targetPosition);
             if (actionDetailsDict[selectedAction].GetAvailableTargetPositions(GetActiveWarrior()).Contains(target)) {
                 actionDetailsDict[selectedAction].PerformAction(target);
-            } else {
-                Debug.Log("Invalid action target");
-            }
-        } else {
-            actionDetailsDict[selectedAction].PerformAction(null);
-        }
+            } else Debug.Log("Invalid action target");
+        } else actionDetailsDict[selectedAction].PerformAction(null);
     }
 
     private void PerformMeleeAttack(CombatGridObject target) {
