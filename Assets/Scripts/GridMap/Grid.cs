@@ -167,5 +167,4 @@ public class Grid<TGridObject> {
         GetGridPosition(worldPosition, out x, out y);
         return GetGridObject(x, y);
     }
-
 }

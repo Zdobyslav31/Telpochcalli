@@ -16,6 +16,7 @@ public class GameHandler : MonoBehaviour {
     private TerrainMap terrainTilemap;
     private AvailablePositionsTilemap availablePositionsTilemap;
     private Grid<CombatGridObject> combatGrid;
+    private SaveAndLoadSystem saveAndLoadSystem;
 
     private int mapWidth = 20;
     private int mapHeight = 13;
@@ -28,16 +29,15 @@ public class GameHandler : MonoBehaviour {
     private void Awake() {
         Instance = this;
 
-
         terrainTilemap = new TerrainMap(mapWidth, mapHeight, cellSize, origin, showTerrainDebug);
         availablePositionsTilemap = new AvailablePositionsTilemap(
                 mapWidth, mapHeight, cellSize, origin, showAvailablePositionsDebug
             );
-        this.combatGrid = new Grid<CombatGridObject>(
+        combatGrid = new Grid<CombatGridObject>(
                 mapWidth, mapHeight, cellSize, origin,
                 (Grid<CombatGridObject> g, int x, int y) => new CombatGridObject(g, x, y), showCombatDebug
             );
-
+        saveAndLoadSystem = new SaveAndLoadSystem();
     }
 
 
@@ -67,10 +67,21 @@ public class GameHandler : MonoBehaviour {
             terrainTilemap.SetTerrainType(mouseWorldPosition, terrainType);
         }
 
-        if (Input.GetKeyDown(KeyCode.S)) {
+        if (Input.GetKeyDown(KeyCode.H)) {
             terrainType = TerrainNode.TerrainType.Sand;
             Vector3 mouseWorldPosition = UtilsClass.GetMouseWorldPosition();
             terrainTilemap.SetTerrainType(mouseWorldPosition, terrainType);
+        }
+
+
+
+        if (Input.GetKeyDown(KeyCode.S)) {
+            saveAndLoadSystem.Save();
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.L)) {
+            saveAndLoadSystem.Load();
         }
 
     }
@@ -106,4 +117,5 @@ public class GameHandler : MonoBehaviour {
     public void HandleClickOnBoard() {
         gridCombatSystem.HandleClickOnGrid(UtilsClass.GetMouseWorldPosition());
     }
+
 }

@@ -4,6 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class WarriorUISystem : MonoBehaviour {
+    public enum Team {
+        Heroes,
+        Enemies
+    }
+    [SerializeField] public Team team;
     public enum Direction {
         N,
         S,

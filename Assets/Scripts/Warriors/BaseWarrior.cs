@@ -5,10 +5,6 @@ using System.Linq;
 using UnityEngine;
 
 public class BaseWarrior : MonoBehaviour {
-    public enum Team {
-        Heroes,
-        Enemies
-    }
     public enum Action {
         Attack,
         Regroup,
@@ -18,7 +14,6 @@ public class BaseWarrior : MonoBehaviour {
     private int MIN_DAMAGE_PERCENTAGE = 3;
     private int MIN_DISTANCE_FOR_CHARGE = 2;
 
-    [SerializeField] public Team team;
     [SerializeField] public string warriorName;
 
     [SerializeField] private int maxMovePoints;

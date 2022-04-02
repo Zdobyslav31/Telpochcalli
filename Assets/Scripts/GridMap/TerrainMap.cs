@@ -42,6 +42,10 @@ public class TerrainMap {
 
     }
 
+    public void SetTerrainType(int x, int y, TerrainNode.TerrainType terrainType) {
+        GetNode(x, y).SetTerrainType(terrainType);
+    }
+
     public void SetTerrainVisual(TerrainVisual terrainVisual) {
         terrainVisual.SetGrid(grid);
     }
@@ -274,5 +278,8 @@ public class TerrainMap {
 
     public bool IsWalkable(Vector3 position) {
         return grid.GetGridObject(position).isWalkable;
+    }
+    public TerrainNode.TerrainType GetTerrainType(int x, int y) {
+        return GetNode(x, y).GetTerrainType();
     }
 }

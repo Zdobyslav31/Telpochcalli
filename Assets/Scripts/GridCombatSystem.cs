@@ -263,7 +263,7 @@ public class GridCombatSystem : MonoBehaviour {
 
     private void UpdateFightBoundStatuses() {
         foreach(GameObject warrior in warriors) {
-            BaseWarrior.Team team = warrior.GetComponent<BaseWarrior>().team;
+            WarriorUISystem.Team team = warrior.GetComponent<WarriorUISystem>().team;
             GetWarriorCoordinates(warrior, out int x, out int y);
             bool isFightBound = GetFieldsInControlZoneOfTeam(OppositeTeam(team)).Contains(GetCombatGrid().GetGridObject(x, y));
             warrior.GetComponent<BaseWarrior>().SetFightBound(isFightBound);
@@ -278,7 +278,7 @@ public class GridCombatSystem : MonoBehaviour {
         foreach (CombatGridObject field in adjacentFields) {
             if (
                     field.GetWarrior() != null
-                    && field.GetWarrior().GetComponent<BaseWarrior>().team != GetActiveTeam()
+                    && field.GetWarrior().GetComponent<WarriorUISystem>().team != GetActiveTeam()
                 ) {
                 availableTargets.Add(field);
             }
@@ -451,8 +451,8 @@ public class GridCombatSystem : MonoBehaviour {
         return warriors[activeWarriorIndex].GetComponent<BaseWarrior>();
     }
 
-    private BaseWarrior.Team GetActiveTeam() {
-        return warriors[activeWarriorIndex].GetComponent<BaseWarrior>().team;
+    private WarriorUISystem.Team GetActiveTeam() {
+        return warriors[activeWarriorIndex].GetComponent<WarriorUISystem>().team;
     }
 
     private void GetWarriorCoordinates(GameObject warrior, out int x, out int y) {
@@ -597,7 +597,7 @@ public class GridCombatSystem : MonoBehaviour {
     }
 
     private List<TerrainNode> GetTerrainNodesOcuppiedByInactiveTeam() {
-        BaseWarrior.Team team = OppositeTeam(GetActiveTeam());
+        WarriorUISystem.Team team = OppositeTeam(GetActiveTeam());
         List<CombatGridObject> gridObjects = GetFieldsOccupiedByTeam(team);
         List<TerrainNode> terrainNodes = new List<TerrainNode>();
         foreach (CombatGridObject gridObject in gridObjects) {
@@ -606,7 +606,7 @@ public class GridCombatSystem : MonoBehaviour {
         return terrainNodes;
     }
 
-    private List<CombatGridObject> GetFieldsInControlZoneOfTeam(BaseWarrior.Team team) {
+    private List<CombatGridObject> GetFieldsInControlZoneOfTeam(WarriorUISystem.Team team) {
         List<CombatGridObject> warriorsLocations = GetFieldsOccupiedByTeam(team);
         List<CombatGridObject> controlledFields = new List<CombatGridObject>();
         foreach (CombatGridObject warriorLocation in warriorsLocations) {
@@ -615,7 +615,7 @@ public class GridCombatSystem : MonoBehaviour {
         return controlledFields;
     }
 
-    private List<TerrainNode> GetTerrainNodesInControlZoneOfTeam(BaseWarrior.Team team) {
+    private List<TerrainNode> GetTerrainNodesInControlZoneOfTeam(WarriorUISystem.Team team) {
         List<TerrainNode> terrainNodes = new List<TerrainNode>();
         foreach (CombatGridObject gridObject in GetFieldsInControlZoneOfTeam(team)) {
             terrainNodes.Add(GetTerrainMap().GetGrid().GetGridObject(gridObject.x, gridObject.y));
@@ -623,24 +623,24 @@ public class GridCombatSystem : MonoBehaviour {
         return terrainNodes;
     }
 
-    private BaseWarrior.Team OppositeTeam(BaseWarrior.Team team) {
-        if (team == BaseWarrior.Team.Heroes) {
-            return BaseWarrior.Team.Enemies;
+    private WarriorUISystem.Team OppositeTeam(WarriorUISystem.Team team) {
+        if (team == WarriorUISystem.Team.Heroes) {
+            return WarriorUISystem.Team.Enemies;
         } else {
-            return BaseWarrior.Team.Heroes;
+            return WarriorUISystem.Team.Heroes;
         }
     }
-    private List<GameObject> TeamMembers(BaseWarrior.Team team) {
+    private List<GameObject> TeamMembers(WarriorUISystem.Team team) {
         List<GameObject> teamMembers = new List<GameObject>();
         foreach (GameObject warrior in warriors) {
-            if (warrior.GetComponent<BaseWarrior>().team == team) {
+            if (warrior.GetComponent<WarriorUISystem>().team == team) {
                 teamMembers.Add(warrior);
             }
         }
         return teamMembers;
     }
 
-    private List<CombatGridObject> GetFieldsOccupiedByTeam(BaseWarrior.Team team) {
+    private List<CombatGridObject> GetFieldsOccupiedByTeam(WarriorUISystem.Team team) {
         List<CombatGridObject> occupiedFields = new List<CombatGridObject>();
         foreach (GameObject warrior in TeamMembers(team)) {
             occupiedFields.Add(GetCombatGrid().GetGridObject(warrior.transform.position));
