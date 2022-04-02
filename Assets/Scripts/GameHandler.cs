@@ -11,7 +11,7 @@ public class GameHandler : MonoBehaviour {
     [SerializeField] private bool showCombatDebug;
     [SerializeField] private bool showAvailablePositionsDebug;
     [SerializeField] private TerrainVisual terrainVisual;
-    [SerializeField] private GridCombatSystem gridCombatSystem;
+    [SerializeField] private CombatSystem gridCombatSystem;
     [SerializeField] private AvailablePositionsTilemapVisual AvailablePositionsTilemapVisual;
     private TerrainMap terrainTilemap;
     private AvailablePositionsTilemap availablePositionsTilemap;
@@ -102,7 +102,7 @@ public class GameHandler : MonoBehaviour {
         return mapHeight;
     }
 
-    public GridCombatSystem GetGridCombatSystem() {
+    public CombatSystem GetCombatSystem() {
         return gridCombatSystem;
     }
 
