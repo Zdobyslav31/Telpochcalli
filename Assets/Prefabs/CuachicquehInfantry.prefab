@@ -673,6 +673,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   warriorName: Cihuacoatl
+  prefab: {fileID: 5648030565311808837}
   maxMovePoints: 35
   maxHealth: 110
   currentHealth: 0

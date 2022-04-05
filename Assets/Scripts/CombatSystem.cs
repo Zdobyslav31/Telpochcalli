@@ -87,7 +87,7 @@ public class CombatSystem : MonoBehaviour {
     public void HandleClickOnGrid(Vector3 targetPosition) {
         switch (phase) {
             case Phase.SettingUp:
-                SpawnWarrior(targetPosition);
+                SpawnFirstWarriorFromList(targetPosition);
                 break;
             case Phase.Movement:
                 MoveActiveWarrior(targetPosition);
@@ -224,16 +224,24 @@ public class CombatSystem : MonoBehaviour {
         }
     }
 
-    private void SpawnWarrior(Vector3 position) {
+    private void SpawnFirstWarriorFromList(Vector3 position) {
         GameObject warriorPrefab = warriorsToDeploy[0];
-        GameObject warrior = combatGridManager.SpawnWarrior(warriorPrefab, position);
-        if (warrior is null) {
-            Debug.Log("Invalid target field!");
-            return;
-        }
-        warriorsToDeploy.RemoveAt(0);
-        warriors.Add(warrior);
+        if (SpawnWarrior(position, warriorPrefab)) warriorsToDeploy.RemoveAt(0);
         if (warriorsToDeploy.Count < 1) ChangePhase();
+    }
+
+    private bool SpawnWarrior(Vector3 position, GameObject warriorPrefab) {
+        GameObject warrior = combatGridManager.SpawnWarrior(warriorPrefab, position);
+        if (warrior is null) return false;
+        warriors.Add(warrior);
+        return true;
+    }
+
+    public bool SpawnWarrior(int x, int y, GameObject warriorPrefab) {
+        GameObject warrior = combatGridManager.SpawnWarrior(warriorPrefab, x, y);
+        if (warrior is null) return false;
+        warriors.Add(warrior);
+        return true;
     }
 
     private void MoveActiveWarrior(Vector3 targetPosition) {

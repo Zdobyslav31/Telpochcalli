@@ -8,7 +8,13 @@ public class CombatGridManager {
 
     public GameObject SpawnWarrior(GameObject warriorPrefab, Vector3 position) {
         CombatGridObject field = GetCombatGrid().GetGridObject(position);
-        if(field.GetWarrior() || !GetTerrainMap().GetNode(field.x, field.y).isWalkable) {
+        return SpawnWarrior(warriorPrefab, field.x, field.y);
+    }
+
+    public GameObject SpawnWarrior(GameObject warriorPrefab, int x, int y) {
+        CombatGridObject field = GetCombatGrid().GetGridObject(x, y);
+        if (field.GetWarrior() || !GetTerrainMap().GetNode(field.x, field.y).isWalkable) {
+            Debug.Log("Invalid target field!");
             return null;
         }
         Quaternion rot = Quaternion.Euler(0, 0, 0);

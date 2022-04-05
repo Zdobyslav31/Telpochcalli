@@ -673,6 +673,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   warriorName: Huitzilin
+  prefab: {fileID: 5648030565311808837}
   maxMovePoints: 35
   maxHealth: 80
   currentHealth: 0

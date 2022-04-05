@@ -673,6 +673,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   warriorName: Yaotl
+  prefab: {fileID: 5648030565311808837}
   maxMovePoints: 35
   maxHealth: 100
   currentHealth: 0

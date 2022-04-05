@@ -168,6 +168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 167aba9f8dbf3724ba63a0c0654b80f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  team: 0
   direction: 3
   healthBarIndicator: {fileID: 2571917682453397076}
   orderlinessBarIndicator: {fileID: 2571917682365401080}
@@ -185,8 +186,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5032f4d4c0b37ab4ea160d04eac5f3dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  team: 0
   warriorName: Pedro de Alvarado
+  prefab: {fileID: 2571917681026336858}
   maxMovePoints: 50
   maxHealth: 100
   currentHealth: 0

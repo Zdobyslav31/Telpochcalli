@@ -17,7 +17,7 @@ public class SaveAndLoadSystem
                     y = y,
                     terrainType = GameHandler.Instance.GetTerrainTilemap().GetTerrainType(x, y),
                     warrior = warrior ? new WarriorSaveObject {
-                        unit = warrior.name,
+                        unit = warrior.GetComponent<BaseWarrior>().prefab,
                         team = warrior.GetComponent<WarriorUISystem>().team,
                         direction = warrior.GetComponent<WarriorUISystem>().direction
                     } : null
@@ -39,6 +39,7 @@ public class SaveAndLoadSystem
             CMDebug.TextPopupMouse("Loaded!");
             SaveObject saveObject = JsonUtility.FromJson<SaveObject>(saveString);
             TerrainMap terrainMap = GameHandler.Instance.GetTerrainTilemap();
+            CombatSystem combatSystem = GameHandler.Instance.GetCombatSystem();
 
             foreach (TileSaveObject tileSaveObject in saveObject.saveObjectArray) {
                 terrainMap.SetTerrainType(
@@ -46,6 +47,11 @@ public class SaveAndLoadSystem
                     tileSaveObject.y,
                     tileSaveObject.terrainType
                 );
+                if (tileSaveObject.warrior.unit != null) {
+                    Debug.Log($"Spawning warrior {tileSaveObject.warrior.unit.ToString()} on field {tileSaveObject.x}, {tileSaveObject.y}");
+                    combatSystem.SpawnWarrior(tileSaveObject.x, tileSaveObject.y, tileSaveObject.warrior.unit);
+                    // FIXME: This won't work. I probably need to save prefab name and load it from resource folder
+                }
             }
         }
     }
@@ -65,7 +71,7 @@ public class SaveAndLoadSystem
 
     [System.Serializable]
     private class WarriorSaveObject {
-        public string unit;
+        public GameObject unit;
         public WarriorUISystem.Team team;
         public WarriorUISystem.Direction direction;
     }
