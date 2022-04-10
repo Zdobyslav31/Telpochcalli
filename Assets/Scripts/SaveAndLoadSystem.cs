@@ -2,6 +2,7 @@ using CodeMonkey;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using UnityEditor;
 using UnityEngine;
 
 public class SaveAndLoadSystem
@@ -17,7 +18,7 @@ public class SaveAndLoadSystem
                     y = y,
                     terrainType = GameHandler.Instance.GetTerrainTilemap().GetTerrainType(x, y),
                     warrior = warrior ? new WarriorSaveObject {
-                        unit = warrior.name,
+                        unit = warrior.GetComponent<BaseWarrior>().unitType,
                         team = warrior.GetComponent<WarriorUISystem>().team,
                         direction = warrior.GetComponent<WarriorUISystem>().direction
                     } : null
@@ -39,6 +40,7 @@ public class SaveAndLoadSystem
             CMDebug.TextPopupMouse("Loaded!");
             SaveObject saveObject = JsonUtility.FromJson<SaveObject>(saveString);
             TerrainMap terrainMap = GameHandler.Instance.GetTerrainTilemap();
+            CombatSystem combatSystem = GameHandler.Instance.GetCombatSystem();
 
             foreach (TileSaveObject tileSaveObject in saveObject.saveObjectArray) {
                 terrainMap.SetTerrainType(
@@ -46,6 +48,10 @@ public class SaveAndLoadSystem
                     tileSaveObject.y,
                     tileSaveObject.terrainType
                 );
+                if (tileSaveObject.warrior.unit != "") {
+                    GameObject prefab = Resources.Load(tileSaveObject.warrior.unit) as GameObject;
+                    combatSystem.SpawnWarrior(tileSaveObject.x, tileSaveObject.y, prefab);
+                }
             }
         }
     }
