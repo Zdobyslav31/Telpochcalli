@@ -547,7 +547,7 @@ PrefabInstance:
     - target: {fileID: 5005177885652640771, guid: 6d57e090be8cc094481870b08fd85589, type: 3}
       propertyPath: prefab
       value: 
-      objectReference: {fileID: 2571917681026336858, guid: 6d57e090be8cc094481870b08fd85589, type: 3}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6d57e090be8cc094481870b08fd85589, type: 3}
 --- !u!1 &183708547
@@ -1819,8 +1819,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6196492253862613800, guid: 97b5dec626f60fb48908c6de24c947a7, type: 3}
       propertyPath: prefab
-      value: 
-      objectReference: {fileID: 5648030565311808837, guid: 97b5dec626f60fb48908c6de24c947a7, type: 3}
+      value: IndianInfantry
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 97b5dec626f60fb48908c6de24c947a7, type: 3}
 --- !u!1 &1754601250 stripped
@@ -2605,7 +2605,7 @@ PrefabInstance:
     - target: {fileID: 5005177885652640771, guid: 1fb9a7932d7cdb6438206b616ed8a14c, type: 3}
       propertyPath: prefab
       value: 
-      objectReference: {fileID: 2571917681026336858, guid: 1fb9a7932d7cdb6438206b616ed8a14c, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 5005177885652640771, guid: 1fb9a7932d7cdb6438206b616ed8a14c, type: 3}
       propertyPath: possibleActions.Array.data[2]
       value: 2
@@ -2674,6 +2674,6 @@ PrefabInstance:
     - target: {fileID: 6196492253862613800, guid: 55970e3c5f4b4e84994aa6401b7db267, type: 3}
       propertyPath: prefab
       value: 
-      objectReference: {fileID: 5648030565311808837, guid: 55970e3c5f4b4e84994aa6401b7db267, type: 3}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 55970e3c5f4b4e84994aa6401b7db267, type: 3}

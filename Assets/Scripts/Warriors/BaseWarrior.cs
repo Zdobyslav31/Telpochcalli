@@ -15,7 +15,7 @@ public class BaseWarrior : MonoBehaviour {
     private int MIN_DISTANCE_FOR_CHARGE = 2;
 
     [SerializeField] public string warriorName;
-    public GameObject prefab;
+    public string unitType;
 
     [SerializeField] private int maxMovePoints;
     private int currentMovePoints;
