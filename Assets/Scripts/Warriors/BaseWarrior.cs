@@ -90,15 +90,18 @@ public class BaseWarrior : MonoBehaviour {
         }
     }
 
-    public void TakeStrike(Strike strike) {
+    public void TakeStrike(Strike strike, out int lostHealth, out int lostOrderliness) {
         Debug.Log(this.gameObject.name + " current stats: health: " + currentHealth + "; orderliness: " + currentOrderliness);
         Debug.Log("Taking " + strike.attackType + " strike: " + strike);
+        lostOrderliness = -strike.preDamageDisruption;
         ChangeOrderliness(-strike.preDamageDisruption);
         float defenceModifier = 1f;
         if (!strike.ignoresOrderliness) {
             defenceModifier = Math.Max(MIN_DAMAGE_PERCENTAGE, (100 - currentOrderliness)) / 100f;
         }
-        ChangeHealth((int)(-strike.damage * defenceModifier));
+        lostHealth = (int)(-strike.damage * defenceModifier);
+        ChangeHealth(lostHealth);
+        lostOrderliness -= strike.disruption;
         ChangeOrderliness(-strike.disruption);
         Debug.Log(this.gameObject.name + " current stats: health: " + currentHealth + "; orderliness: " + currentOrderliness);
     }

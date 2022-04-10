@@ -327,9 +327,10 @@ public class CombatSystem : MonoBehaviour {
     }
 
     private void TakeStrike(CombatGridObject target, Strike strike) {
-        target.GetWarrior().GetComponent<BaseWarrior>().TakeStrike(strike);
+        target.GetWarrior().GetComponent<BaseWarrior>().TakeStrike(strike, out int lostHealth, out int lostOrderliness);
         StartUpdateBarsAnimation(target.GetWarrior().GetComponent<WarriorUISystem>());
-
+        Utils.CreateWorldTextPopup(lostHealth.ToString(), target.GetWarrior().transform.position, Color.green);
+        Utils.CreateWorldTextPopup(lostOrderliness.ToString(), target.GetWarrior().transform.position + new Vector3(0, -2), Color.blue);
     }
 
     private void PerformRangedAttack(CombatGridObject target) {
