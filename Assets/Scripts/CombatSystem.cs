@@ -77,7 +77,9 @@ public class CombatSystem : MonoBehaviour {
         isActionSelected = false;
         ActiveWarriorTravelledPath = new List<TerrainNode>();
         UpdateAvailablePositions();
-        GetActiveWarriorUISystem().SetActiveIndicatorEnabled(true);
+        //if (warriors.Count > 0) {
+        //    GetActiveWarriorUISystem().SetActiveIndicatorEnabled(true);
+        //}
     }
 
     private void Update() {
@@ -106,6 +108,7 @@ public class CombatSystem : MonoBehaviour {
     public void ChangePhase() {
         switch (phase) {
             case Phase.SettingUp:
+                ChangeActiveWarrior(true);
                 phase = Phase.Movement;
                 Utils.ChangeButtonText(changePhaseButton, "Zakończ poruszanie");
                 break;
@@ -157,12 +160,14 @@ public class CombatSystem : MonoBehaviour {
         }
     }
 
-    private void ChangeActiveWarrior() {
-        GetActiveWarriorUISystem().SetActiveIndicatorEnabled(false);
-        if (activeWarriorIndex < warriors.Count - 1) {
-            activeWarriorIndex++;
-        } else {
-            activeWarriorIndex = 0;
+    private void ChangeActiveWarrior(bool initial = false) {
+        if (!initial) {
+            GetActiveWarriorUISystem().SetActiveIndicatorEnabled(false);
+            if (activeWarriorIndex < warriors.Count - 1) {
+                activeWarriorIndex++;
+            } else {
+                activeWarriorIndex = 0;
+            }
         }
         GetActiveWarriorClass().ResetMovePoints();
         GetActiveWarriorUISystem().SetActiveIndicatorEnabled(true);
