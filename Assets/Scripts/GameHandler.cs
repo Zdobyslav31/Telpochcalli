@@ -20,8 +20,8 @@ public class GameHandler : MonoBehaviour {
 
     private int mapWidth = 20;
     private int mapHeight = 13;
-    private float cellSize = 3f;
-    private Vector3 origin = new Vector3(-30, -20, 0);
+    private float cellSize = 2.8f;
+    private Vector3 origin = new Vector3(-30, -18, 0);
 
     private TerrainNode.TerrainType terrainType;
 

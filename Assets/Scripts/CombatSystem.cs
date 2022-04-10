@@ -77,9 +77,6 @@ public class CombatSystem : MonoBehaviour {
         isActionSelected = false;
         ActiveWarriorTravelledPath = new List<TerrainNode>();
         UpdateAvailablePositions();
-        //if (warriors.Count > 0) {
-        //    GetActiveWarriorUISystem().SetActiveIndicatorEnabled(true);
-        //}
     }
 
     private void Update() {
@@ -89,7 +86,7 @@ public class CombatSystem : MonoBehaviour {
     public void HandleClickOnGrid(Vector3 targetPosition) {
         switch (phase) {
             case Phase.SettingUp:
-                SpawnFirstWarriorFromList(targetPosition);
+                DeployFirstWarriorFromList(targetPosition);
                 break;
             case Phase.Movement:
                 MoveActiveWarrior(targetPosition);
@@ -108,15 +105,15 @@ public class CombatSystem : MonoBehaviour {
     public void ChangePhase() {
         switch (phase) {
             case Phase.SettingUp:
-                ChangeActiveWarrior(true);
                 phase = Phase.Movement;
+                ChangeActiveWarrior(true);
                 Utils.ChangeButtonText(changePhaseButton, "Zakończ poruszanie");
                 break;
             case Phase.Movement:
+                phase = Phase.Rotation;
                 if (ActiveWarriorTravelledPath.Any()) {
                     GetActiveWarriorClass().AdjustChargeSpeed(ActiveWarriorTravelledPath);
                 }
-                phase = Phase.Rotation;
                 Utils.ChangeButtonText(changePhaseButton, "Zakończ obrót");
                 break;
             case Phase.Rotation:
@@ -126,9 +123,9 @@ public class CombatSystem : MonoBehaviour {
                 Utils.ChangeButtonText(changePhaseButton, "Zakończ turę");
                 break;
             case Phase.Action:
-                ChangeActiveWarrior();
                 phase = Phase.Movement;
-                selectActionPanel.SetActive(false);
+                ChangeActiveWarrior();
+                DeactivateSelectActionPanel();
                 Utils.ChangeButtonText(changePhaseButton, "Zakończ poruszanie");
                 break;
         }
@@ -188,6 +185,10 @@ public class CombatSystem : MonoBehaviour {
         }
     }
 
+    private void DeactivateSelectActionPanel() {
+        selectActionPanel.SetActive(false);
+    }
+
     private void UpdateAvailablePositions() {
 
         switch (phase) {
@@ -229,20 +230,20 @@ public class CombatSystem : MonoBehaviour {
         }
     }
 
-    private void SpawnFirstWarriorFromList(Vector3 position) {
+    private void DeployFirstWarriorFromList(Vector3 position) {
         GameObject warriorPrefab = warriorsToDeploy[0];
-        if (SpawnWarrior(position, warriorPrefab)) warriorsToDeploy.RemoveAt(0);
+        if (DeployWarrior(position, warriorPrefab)) warriorsToDeploy.RemoveAt(0);
         if (warriorsToDeploy.Count < 1) ChangePhase();
     }
 
-    private bool SpawnWarrior(Vector3 position, GameObject warriorPrefab) {
+    private bool DeployWarrior(Vector3 position, GameObject warriorPrefab) {
         GameObject warrior = combatGridManager.SpawnWarrior(warriorPrefab, position);
         if (warrior is null) return false;
         warriors.Add(warrior);
         return true;
     }
 
-    public bool SpawnWarrior(int x, int y, GameObject warriorPrefab) {
+    public bool DeployWarrior(int x, int y, GameObject warriorPrefab) {
         GameObject warrior = combatGridManager.SpawnWarrior(warriorPrefab, x, y);
         if (warrior is null) return false;
         warriors.Add(warrior);

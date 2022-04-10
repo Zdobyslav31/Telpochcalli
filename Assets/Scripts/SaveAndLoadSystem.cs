@@ -50,7 +50,7 @@ public class SaveAndLoadSystem
                 );
                 if (tileSaveObject.warrior.unit != "") {
                     GameObject prefab = Resources.Load(tileSaveObject.warrior.unit) as GameObject;
-                    combatSystem.SpawnWarrior(tileSaveObject.x, tileSaveObject.y, prefab);
+                    combatSystem.DeployWarrior(tileSaveObject.x, tileSaveObject.y, prefab);
                 }
             }
         }
