@@ -2623,6 +2623,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: JaguarInfantry
       objectReference: {fileID: 0}
+    - target: {fileID: 5648030565311808837, guid: 55970e3c5f4b4e84994aa6401b7db267, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5648030565311808839, guid: 55970e3c5f4b4e84994aa6401b7db267, type: 3}
       propertyPath: m_RootOrder
       value: 8
