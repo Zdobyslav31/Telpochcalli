@@ -30,13 +30,13 @@ public class SaveAndLoadSystem
             saveObjectArray = saveObjectList.ToArray()
         };
         string saveString = JsonUtility.ToJson(saveObject);
-        File.WriteAllText(Application.dataPath + "/Maps/save.txt", saveString);
+        File.WriteAllText(Path.Combine(Application.streamingAssetsPath, "save.txt"), saveString);
         CMDebug.TextPopupMouse("Saved!");
     }
 
     public void Load() {
-        if (File.Exists(Application.dataPath + "/Maps/save.txt")) {
-            string saveString = File.ReadAllText(Application.dataPath + "/Maps/save.txt");
+        if (File.Exists(Path.Combine(Application.streamingAssetsPath, "save.txt"))) {
+            string saveString = File.ReadAllText(Path.Combine(Application.streamingAssetsPath, "save.txt"));
             CMDebug.TextPopupMouse("Loaded!");
             SaveObject saveObject = JsonUtility.FromJson<SaveObject>(saveString);
             TerrainMap terrainMap = GameHandler.Instance.GetTerrainTilemap();
@@ -53,7 +53,8 @@ public class SaveAndLoadSystem
                     combatSystem.DeployWarrior(tileSaveObject.x, tileSaveObject.y, prefab);
                 }
             }
-        }
+        } else
+            CMDebug.TextPopupMouse("File not found!");
     }
 
     [System.Serializable]
